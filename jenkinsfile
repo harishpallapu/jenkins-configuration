@@ -40,7 +40,12 @@ pipeline {
             steps {
 				sh 'pwd'
 				sh 'git clone https://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@github.com/harishpallapu/test-reports.git'
-				sh 'ls'
+				sh 'cp folder/jmeterreport.zip test-reports'
+				sh '''cp .scannerwork/report-task.txt test-reports
+				    cd test-reports
+				    git add .
+				    git commit -m ${BUILD_NUMBER}
+				    git push'''
             }
         }
     }
