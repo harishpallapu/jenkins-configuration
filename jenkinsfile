@@ -38,7 +38,7 @@ pipeline {
 	stage('upload reports to nexus') {
             steps {
 				sh 'mkdir test-reports'
-				sh 'cp -r folder/jmeterreport.zip test-reports'
+				sh 'cp -r folder/jmeterreport-${BUILD_NUMBER}.zip test-reports'
 				sh '''cp .scannerwork/report-task.txt test-reports
 				    cd test-reports
 				    mv report-task.txt report-task-${BUILD_NUMBER}.txt
