@@ -36,16 +36,13 @@ pipeline {
 				
             }
         }
-	stage('upload reports to github') {
+	stage('upload reports to nexus') {
             steps {
-				sh 'pwd'
-				sh 'git clone https://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@github.com/harishpallapu/test-reports.git'
+				sh 'mkdir test-reports'
 				sh 'cp -r folder/OnlineShop_${BUILD_NUMBER}.html test-reports'
 				sh '''cp .scannerwork/report-task.txt test-reports
 				    cd test-reports
-				    git add .
-				    git commit -m ${BUILD_NUMBER}
-				    git push'''
+				    curl --upload-file * -u admin:admin -v http://15.206.195.157:8081/repository/jenkins-reports/'''
             }
         }
     }
