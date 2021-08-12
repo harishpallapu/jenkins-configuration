@@ -31,7 +31,7 @@ pipeline {
 				sh '''cd folder
 					chmod 777 -R *
 					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html 
-					zip OnlineShop_${BUILD_NUMBER}.html/* jmeterreport.zip
+					zip jmeterreport.zip OnlineShop_${BUILD_NUMBER}.html/*
 					echo please checkjemeter report html file attachment  | mail -s "jmeter-build-no-${BUILD_NUMBER}-reports" nihas0505@gmail.com -A jmeterreport.zip'''
 				
             }
