@@ -42,7 +42,8 @@ pipeline {
 				sh 'cp -r folder/OnlineShop_${BUILD_NUMBER}.html test-reports'
 				sh '''cp .scannerwork/report-task.txt test-reports
 				    cd test-reports
-				    curl --upload-file * -u admin:admin -v http://15.206.195.157:8081/repository/jenkins-reports/'''
+				    zip report.zip .
+				    curl --upload-file report.zip -u admin:admin -v http://15.206.195.157:8081/repository/jenkins-reports/'''
             }
         }
     }
