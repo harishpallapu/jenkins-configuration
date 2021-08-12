@@ -14,7 +14,7 @@ pipeline {
 				sh 'cp -r sonarqube-scanner-scripts/* .'
 				sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
 				sh 'ls -al'
-				sh 'cat .scannerwork/report-task.txt  | mail -s "build-no-${BUILD_NUMBER}-reports" nihas0505@gmail.com'
+				sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
             }
         }
         stage('SCA') {
@@ -31,7 +31,7 @@ pipeline {
 				sh '''cd folder
 					chmod 777 -R *
 					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html 
-					zip -r jmeterreport.zip OnlineShop_${BUILD_NUMBER}.html/*'''
+					zip -r jmeterreport-${BUILD_NUMBER}.zip OnlineShop_${BUILD_NUMBER}.html/*'''
 				
             }
         }
@@ -41,6 +41,7 @@ pipeline {
 				sh 'cp -r folder/jmeterreport.zip test-reports'
 				sh '''cp .scannerwork/report-task.txt test-reports
 				    cd test-reports
+				    mv report-task.txt report-task-${BUILD_NUMBER}.txt
 				    curl --upload-file report-task.txt -u admin:admin -v http://15.206.195.157:8081/repository/jenkins-reports/
 				    curl --upload-file jmeterreport.zip -u admin:admin -v http://15.206.195.157:8081/repository/jenkins-reports/'''
             }
