@@ -25,6 +25,8 @@ pipeline {
 
         stage('jmeter') {
             steps {
+	    			sh 'pwd'
+				sh 'ls -al'
 				sh 'git clone https://github.com/harishpallapu/folder.git'
 				sh 'cd folder'
 				sh 'chmod 777 *'
