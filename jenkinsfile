@@ -9,7 +9,7 @@ pipeline {
 				sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
             }
         }
-        stage('SAST analasys') {
+        stage('SAST analysis') {
             steps {
 				sh 'cp -r sonarqube-scanner-scripts/* .'
 				sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
