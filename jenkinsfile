@@ -29,10 +29,10 @@ pipeline {
 				sh 'ls -al'
 				sh 'git clone https://github.com/harishpallapu/folder.git'
 				sh 'cd folder'
-				sh 'chmod 777 *'
-				sh './apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html'
-				sh 'zip OnlineShop_${BUILD_NUMBER}.html jmeterreport.zip '
-				sh 'echo please checkjemeter report html file attachment  | mail -s "jmeter-build-no-${BUILD_NUMBER}-reports" nihas0505@gmail.com -A jmeterreport.zip'
+					chmod 777 *'
+					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html'
+					zip OnlineShop_${BUILD_NUMBER}.html jmeterreport.zip '
+					echo please checkjemeter report html file attachment  | mail -s "jmeter-build-no-${BUILD_NUMBER}-reports" nihas0505@gmail.com -A jmeterreport.zip'
 				
             }
         }
