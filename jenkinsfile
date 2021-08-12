@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('source code checkout') {
+            steps {
+				sh 'rm -rf *'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/harishpallapu/SourceCode_SAST.git']]])
+				sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
+            }
+        }
+        stage('SAST analasys') {
+            steps {
+				sh 'cp -r sonarqube-scanner-scripts/* .'
+				sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
+				sh 'ls -al'
+            }
+        }
+        stage('send mail reports') {
+            steps {
+                sh 'cat .scannerwork/report-task.txt  | mail -s "build-no-${BUILD_NUMBER}-reports" nihas0505@gmail.com'
+            }
+        }
+    }
+}
