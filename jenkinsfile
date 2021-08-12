@@ -31,8 +31,8 @@ pipeline {
 				sh '''cd folder
 					chmod 777 -R *
 					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html 
-					zip -r jmeterreport.zip OnlineShop_${BUILD_NUMBER}.html/*
-					//echo please checkjemeter report html file attachment  | mail -s "jmeter-build-no-${BUILD_NUMBER}-reports" nihas0505@gmail.com -A jmeterreport.zip'''
+					zip jmeterreport.zip OnlineShop_${BUILD_NUMBER}.html/*
+					echo please checkjemeter report html file attachment  | mail -s "jmeter-build-no-${BUILD_NUMBER}-reports" nihas0505@gmail.com -A jmeterreport.zip'''
 				
             }
         }
@@ -40,7 +40,7 @@ pipeline {
             steps {
 				sh 'pwd'
 				sh 'git clone https://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@github.com/harishpallapu/test-reports.git'
-				sh 'cp folder/jmeterreport.zip test-reports'
+				sh 'cp -r folder/OnlineShop_${BUILD_NUMBER}.html test-reports'
 				sh '''cp .scannerwork/report-task.txt test-reports
 				    cd test-reports
 				    git add .
