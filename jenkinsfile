@@ -34,7 +34,7 @@ pipeline {
 				
             }
         }
-		stage('jmeter') {
+	stage('upload reports to github') {
             steps {
 				sh 'pwd'
 				sh 'git clone https://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@github.com/harishpallapu/test-reports.git'
