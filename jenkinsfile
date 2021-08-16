@@ -19,7 +19,7 @@ pipeline {
         }
         stage('SCA') {
             steps {
-				sh 'wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.1.6/dependency-check-6.1.6-release.zip'
+				sh 'wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.1.6/dependency-check-6.2.2-release.zip'
 				sh 'unzip -q dependency-check-6.1.6-release.zip'
 				sh './dependency-check/bin/dependency-check.sh --project "TeachersFCU" --scan "Shoppingcart" --format HTML --out .'
             }
