@@ -21,7 +21,7 @@ pipeline {
             steps {
 				sh 'wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.2.2/dependency-check-6.2.2-release.zip '
 				sh 'unzip -q dependency-check-6.2.2-release.zip'
-				sh './dependency-check-6.2.2-release/dependency-check/bin/dependency-check.sh --project "TeachersFCU" --scan "Shoppingcart" --format HTML --out .'
+				sh './dependency-check/bin/dependency-check.sh --project "TeachersFCU" --scan "Shoppingcart" --format HTML --out .'
             }
         }
 
