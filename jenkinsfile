@@ -61,6 +61,7 @@ pipeline {
 				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://13.232.127.170:8081/repository/jenkins-reports/'''
             }
         }
+	}
 	post {
         // Clean after build
         always {
@@ -68,6 +69,5 @@ pipeline {
                     deleteDirs: true,
                     disableDeferredWipeout: true)
         }
-    }
     }
 }
