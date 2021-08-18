@@ -38,6 +38,24 @@ pipeline {
 		}		
             }
 	}
+	stage('FunctionalAutomation_Web') {
+           steps {
+		   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+	    			sh '''git clone https://github.com/harishpallapu/WebAutomationTesting.git
+					cd WebAutomationTesting
+					mvn test'''			
+            }
+			}
+	 }
+		stage('FunctionalAutomation_Mobile') {
+            steps {
+			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+	    			sh ''' git clone https://github.com/harishpallapu/MobileAutomationTesting.git
+					cd MobileAutomationTesting
+					mvn test'''			
+            }
+			}
+	 }
         stage('jmeter') {
             steps {
 	    			sh 'pwd'
