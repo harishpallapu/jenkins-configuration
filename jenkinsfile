@@ -82,7 +82,10 @@ pipeline {
 	post {
         // Clean after build
         always {
-            cleanWs(cleanWhenNotBuilt: false,
+		mail to: 'nihas0505@gmail.com',
+          	subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
+         	body: "${env.BUILD_URL} has result ${currentBuild.result}"
+		cleanWs(cleanWhenNotBuilt: false,
                     deleteDirs: true,
                     disableDeferredWipeout: true)
         }
