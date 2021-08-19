@@ -59,8 +59,8 @@ pipeline {
 			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 	    			sh """ git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
 					cd lastestmobile
-					mvn test
-					zip -r mobile-test-report-${BUILD_NUMBER}.zip target/surefire-reports/* """			
+					mvn test """
+				sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip lastestmobile/target/surefire-reports/*'
             }
 			}
 	 }
