@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('source code checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: '${params.SAST_GIT_URL}']]])
+                git '${params.SAST_GIT_URL}'
 				sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
             }
         }
