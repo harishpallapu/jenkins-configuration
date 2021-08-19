@@ -33,7 +33,7 @@ pipeline {
 	stage('deploy to tomcat') {
             steps {
 	    	sshagent(['deploy_user']) {
-    				sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@15.207.86.92:/opt/tomcat/webapps'		
+    				sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@52.66.208.66:/opt/tomcat/webapps'		
 		}		
             }
 	}
@@ -74,8 +74,8 @@ pipeline {
 				sh '''cp .scannerwork/report-task.txt test-reports
 				    cd test-reports
 				    mv report-task.txt report-task-${BUILD_NUMBER}.txt
-				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://3.108.215.202:8081/repository/jenkins-reports/
-				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://3.108.215.202:8081/repository/jenkins-reports/'''
+				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://15.206.194.41:8081/repository/jenkins-reports/
+				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://15.206.194.41:8081/repository/jenkins-reports/'''
             }
         }
 	}
