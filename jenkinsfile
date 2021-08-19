@@ -99,7 +99,7 @@ pipeline {
 				sh 'cp jmeterreport-${BUILD_NUMBER}.zip test-reports'
 				sh 'cp web-test-report-$BUILD_NUMBER.zip test-reports'
 				sh 'cp mobile-test-report-$BUILD_NUMBER.zip test-reports'
-				sh 'cp -r dast-reports/report-${BUILD_NUMBER}.zip test-reports'
+				sh 'cp -r dast-testing/report-${BUILD_NUMBER}.zip test-reports'
 				
 				sh """
 				    cd test-reports
