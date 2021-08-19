@@ -60,7 +60,7 @@ pipeline {
 	    			sh """ git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
 					cd lastestmobile
 					mvn test
-					zip -r mobile-test-report-${BUILD_NUMBER}.zip src/test/java/com/shoppingcart/Reports/* """			
+					zip -r mobile-test-report-${BUILD_NUMBER}.zip target/surefire-reports/* """			
             }
 			}
 	 }
