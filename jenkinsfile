@@ -49,8 +49,7 @@ pipeline {
 		   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
 	    			sh """git clone ${params.FUNCTIONAL_WEB_GIT_URL}
 					cd webtest
-					mvn test
-				    zip -r web-test-report-${BUILD_NUMBER}.zip src/test/java/com/shoppingcart/Reports/* """		
+					mvn test """		
             }
 			}
 	 }
@@ -60,7 +59,6 @@ pipeline {
 	    			sh """ git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
 					cd lastestmobile
 					mvn test """
-				sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip lastestmobile/target/surefire-reports/*'
             }
 			}
 	 }
@@ -85,26 +83,31 @@ pipeline {
 				sh "git clone ${params.JMETER_GIT_URL}"
 				sh """cd folder
 					chmod 777 -R *
-					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html 
-					zip -r jmeterreport-${BUILD_NUMBER}.zip OnlineShop_${BUILD_NUMBER}.html/* """
+					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
 				
             }
         }
 	stage('upload reports to nexus') {
             steps {
+	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
+	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip lastestmobile/target/surefire-reports/*'
+				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip folder/OnlineShop_${BUILD_NUMBER}.html/*'
+				
 				sh 'mkdir test-reports'
+				
 				sh 'cp .scannerwork/report-task.txt test-reports'
-				sh 'cp -r folder/jmeterreport-${BUILD_NUMBER}.zip test-reports'
-				sh 'cp -r webtest/web-test-report-$BUILD_NUMBER.zip test-reports'
-				sh 'cp -r lastestmobile/mobile-test-report-$BUILD_NUMBER.zip test-reports'
+				sh 'cp jmeterreport-${BUILD_NUMBER}.zip test-reports'
+				sh 'cp web-test-report-$BUILD_NUMBER.zip test-reports'
+				sh 'cp mobile-test-report-$BUILD_NUMBER.zip test-reports'
 				sh 'cp -r dast-reports/report-${BUILD_NUMBER}.zip test-reports'
+				
 				sh """
 				    cd test-reports
 				    mv report-task.txt report-task-${BUILD_NUMBER}.txt
 				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/
-					curl --upload-file web-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/
-					curl --upload-file mobile-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/
-					curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
+				    curl --upload-file web-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/
+				    curl --upload-file mobile-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/
+				    curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
 				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/ """
             }
         }
