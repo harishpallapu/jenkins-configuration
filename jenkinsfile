@@ -1,10 +1,17 @@
 pipeline {
     agent any
-
+	parameters {
+	    string(name: 'SAST_GIT_URL', defaultValue: 'https://github.com/harishpallapu/SourceCode_SAST.git', description: 'sast source code git url')
+	    string(name: 'FUNCTIONAL_WEB_GIT_URL', defaultValue: 'https://github.com/harishpallapu/webtest.git', description: 'functional automation web source code git url')
+	    string(name: 'FUNCTIONAL_MOBILE_GIT_URL', defaultValue: 'https://github.com/harishpallapu/lastestmobile.git', description: 'functional automation mobile source code git url')
+		string(name: 'JMETER_GIT_URL', defaultValue: 'https://github.com/harishpallapu/folder.git', description: 'jmeter source code git url')
+        string(name: 'TOMCAT_IP', defaultValue: '15.206.168.88', description: 'tomcat server ip address')
+		string(name: 'NEXUS_IP', defaultValue: '52.66.245.120', description: 'nexus server ip address')
+    }
     stages {
         stage('source code checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/harishpallapu/SourceCode_SAST.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: '${params.SAST_GIT_URL}']]])
 				sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
             }
         }
@@ -33,25 +40,41 @@ pipeline {
 	stage('deploy to tomcat') {
             steps {
 	    	sshagent(['deploy_user']) {
-    				sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@52.66.208.66:/opt/tomcat/webapps'		
+    				sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@${params.TOMCAT_IP}:/opt/tomcat/webapps'		
 		}		
             }
 	}
 	stage('FunctionalAutomation_Web') {
            steps {
 		   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-	    			sh '''git clone https://github.com/harishpallapu/WebAutomationTesting.git
-					cd WebAutomationTesting
-					mvn test'''			
+	    			sh '''git clone ${params.FUNCTIONAL_WEB_GIT_URL}
+					cd webtest
+					mvn test
+				    zip -r web-test-report-${BUILD_NUMBER}.zip src/test/java/com/shoppingcart/Reports/* '''		
             }
 			}
 	 }
 		stage('FunctionalAutomation_Mobile') {
             steps {
 			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-	    			sh ''' git clone https://github.com/harishpallapu/MobileAutomationTesting.git
-					cd MobileAutomationTesting
-					mvn test'''			
+	    			sh ''' git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
+					cd lastestmobile
+					mvn test
+					zip -r mobile-test-report-${BUILD_NUMBER}.zip src/test/java/com/shoppingcart/Reports/* '''			
+            }
+			}
+	 }
+	 stage('DAST') {
+            steps {
+			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+	    			sh '''mkdir dast-testing
+					cd dast-testing
+					wget https://github.com/Arachni/arachni/releases/download/v1.5.1/arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
+					tar -xvzf arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
+					chmod 777 -R *
+					mv arachni-1.5.1-0.5.12 arachni
+					./arachni/bin/arachni http://15.206.168.88:8080/SpringMVCAnnotationShoppingCart/ --checks=* --report-save-path=reports.afr
+					./arachni/bin/arachni_reporter reports.afr --reporter=html:outfile=report-${BUILD_NUMBER}.zip '''			
             }
 			}
 	 }
@@ -59,7 +82,7 @@ pipeline {
             steps {
 	    			sh 'pwd'
 				sh 'ls -al'
-				sh 'git clone https://github.com/harishpallapu/folder.git'
+				sh 'git clone ${params.JMETER_GIT_URL}'
 				sh '''cd folder
 					chmod 777 -R *
 					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html 
@@ -70,12 +93,19 @@ pipeline {
 	stage('upload reports to nexus') {
             steps {
 				sh 'mkdir test-reports'
+				sh 'cp .scannerwork/report-task.txt test-reports'
 				sh 'cp -r folder/jmeterreport-${BUILD_NUMBER}.zip test-reports'
-				sh '''cp .scannerwork/report-task.txt test-reports
+				sh 'cp -r webtest/web-test-report-$BUILD_NUMBER.zip test-reports'
+				sh 'cp -r lastestmobile/mobile-test-report-$BUILD_NUMBER.zip test-reports'
+				sh 'cp -r dast-reports/report-${BUILD_NUMBER}.zip test-reports'
+				sh '''
 				    cd test-reports
 				    mv report-task.txt report-task-${BUILD_NUMBER}.txt
-				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://15.206.194.41:8081/repository/jenkins-reports/
-				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://15.206.194.41:8081/repository/jenkins-reports/'''
+				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/
+					curl --upload-file web-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/
+					curl --upload-file mobile-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/
+					curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
+				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/ '''
             }
         }
 	}
