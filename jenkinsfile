@@ -117,7 +117,26 @@ pipeline {
         always {
 		mail to: 'nihas0505@gmail.com',
           	subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
-         	body: "${env.BUILD_URL} has result ${currentBuild.result}"
+         	body: """${env.BUILD_URL} has result ${currentBuild.result}
+		
+		Please find build reports................................!
+		
+		SAST REPORTS
+		http://${params.NEXUS_IP}:8081/service/rest/repository/browse/jenkins-reports/sast-reports/report-task-${BUILD_NUMBER}.txt
+		--------------------------------------------------------------------------------------------------------------------------------------
+		FUNCTIONAL AUTOMATION WEB REPORTS
+		http://${params.NEXUS_IP}:8081/service/rest/repository/browse/jenkins-reports/web-test-reports/web-test-report-${BUILD_NUMBER}.zip
+		----------------------------------------------------------------------------------------------------------------------------------------
+		FUNCTIONAL AUTOMATION MOBILE REPORTS
+		http://${params.NEXUS_IP}:8081/service/rest/repository/browse/jenkins-reports/mobile-test-reports/mobile-test-report-${BUILD_NUMBER}.zip
+		------------------------------------------------------------------------------------------------------------------------------------------
+		DAST REPORTS
+		http://${params.NEXUS_IP}:8081/service/rest/repository/browse/jenkins-reports/dast-reports/report-${BUILD_NUMBER}.zip
+		-----------------------------------------------------------------------------------------------------------------------------------------
+		JMETER REPORTS
+		http://${params.NEXUS_IP}:8081/service/rest/repository/browse/jenkins-reports/jmeter-reports/jmeterreport-${BUILD_NUMBER}.zip
+		
+		FOR MORE INFORMATION PLEASE CONTACT DEVSECOPS TEAM...........!"""
 		jiraSendBuildInfo site: 'vamsisanagala.atlassian.net'
 		cleanWs(cleanWhenNotBuilt: false,
                     deleteDirs: true,
