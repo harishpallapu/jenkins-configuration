@@ -25,6 +25,7 @@ pipeline {
 							sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
 						} catch (err) {
 							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 						}   
@@ -56,6 +57,7 @@ pipeline {
 							sh 'mvn clean package'
 						} catch (err) {
 							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 						}
@@ -71,6 +73,7 @@ pipeline {
 						}
 						} catch (err) {
 							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 						}		
@@ -86,6 +89,7 @@ pipeline {
 							mvn test """
 						} catch (err) {
 							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 						}					
@@ -101,6 +105,7 @@ pipeline {
 							mvn test """
 						} catch (err) {
 							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 							}
@@ -121,6 +126,7 @@ pipeline {
 							./arachni/bin/arachni_reporter reports.afr --reporter=html:outfile=report-${BUILD_NUMBER}.zip """			
             					} catch (err) {
 							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 							}
@@ -139,6 +145,7 @@ pipeline {
 							./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
             					} catch (err) {
 							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 							}
