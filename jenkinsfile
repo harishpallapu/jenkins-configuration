@@ -39,12 +39,11 @@ pipeline {
 							sh 'unzip -q dependency-check-6.2.2-release.zip'
 							sh './dependency-check/bin/dependency-check.sh --noupdate --project "TeachersFCU" --scan "Shoppingcart/lib/" --format HTML --out .'
 						
-						} catch (Exception error) {
+						} catch (err) {
 							echo err.getMessage()
-							currentBuild.result = 'FAILURE'
+							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
-							return
 						}
 				}
 
