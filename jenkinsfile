@@ -62,11 +62,19 @@ pipeline {
             }
 	 }
 	stage('deploy to tomcat') {
-            steps {
-	    	sshagent(['deploy_user']) {
-    				sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${params.TOMCAT_IP}:/opt/tomcat/webapps"		
-		}		
-            }
+            			steps {
+					script {
+						try {
+							sshagent(['deploy_user']) {
+							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${params.TOMCAT_IP}:/opt/tomcat/webapps"		
+						}
+						} catch (err) {
+							echo err.getMessage()
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							JiraFunction()
+						}		
+					}
+				}
 	}
 	stage('FunctionalAutomation_Web') {
            steps {
