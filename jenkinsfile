@@ -39,11 +39,12 @@ pipeline {
 							sh 'unzip -q dependency-check-6.2.2-release.zip'
 							sh './dependency-check/bin/dependency-check.sh --noupdate --project "TeachersFCU" --scan "Shoppingcart/lib/" --format HTML --out .'
 						
-						} catch (err) {
+						} catch (Exception error) {
 							echo err.getMessage()
 							currentBuild.result = 'FAILURE'
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
+							return
 						}
 				}
 
