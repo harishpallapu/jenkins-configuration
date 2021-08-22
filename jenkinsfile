@@ -77,23 +77,35 @@ pipeline {
 				}
 	}
 	stage('FunctionalAutomation_Web') {
-           steps {
-		   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-	    			sh """git clone ${params.FUNCTIONAL_WEB_GIT_URL}
-					cd webtest
-					mvn test """		
-            }
-			}
+           			steps {
+		   			script {
+						try {
+							sh """git clone ${params.FUNCTIONAL_WEB_GIT_URL}
+							cd webtest
+							mvn test """
+						} catch (err) {
+							echo err.getMessage()
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							JiraFunction()
+						}					
+					}
+	 		}
 	 }
-		stage('FunctionalAutomation_Mobile') {
-            steps {
-			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-	    			sh """ git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
-					cd ultranewmobile
-					mvn test """
-            }
-			}
-	 }
+	stage('FunctionalAutomation_Mobile') {
+            				steps {
+		   			script {
+						try {
+							sh """ git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
+							cd ultranewmobile
+							mvn test """
+						} catch (err) {
+							echo err.getMessage()
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							JiraFunction()
+							}
+					}
+				}
+	}
 	 stage('DAST') {
             steps {
 			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
