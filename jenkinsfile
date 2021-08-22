@@ -17,12 +17,20 @@ pipeline {
         }
         stage('SAST analysis') {
             steps {
-				sh 'cp -r sonarqube-scanner-scripts/* .'
-				sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
-				sh 'ls -al'
-				sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
-            }
-        }
+			      script {
+						try {
+							sh 'cp -r sonarqube-scanner-scripts/* .'
+							sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
+							sh 'ls -al'
+							sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
+						} catch (err) {
+							echo err.getMessage()
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							JiraFunction()
+						}   
+					}
+			}
+	}
         stage('SCA') {
             steps {
 			      script {
