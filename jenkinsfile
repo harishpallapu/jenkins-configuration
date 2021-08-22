@@ -50,7 +50,15 @@ pipeline {
         }
 	stage('build') {
             steps {
-	    			sh 'mvn clean package'			
+				script {
+						try {
+							sh 'mvn clean package'
+						} catch (err) {
+							echo err.getMessage()
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							JiraFunction()
+						}
+				}							
             }
 	 }
 	stage('deploy to tomcat') {
