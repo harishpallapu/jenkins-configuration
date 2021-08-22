@@ -199,8 +199,7 @@ pipeline {
                     deleteDirs: true,
                     disableDeferredWipeout: true)
         }
-    }
-}
+ }
 
 void JiraFunction() {
     sh ("""curl -D- -H "Authorization: Basic dmFtc2lraXJhbnJlZGR5QGdtYWlsLmNvbTpxdkRZSTNWbUNJdWUzWlZyZ2NiVTA5MjA=" -X POST --data '{"fields":{"project":{"key": "JJI"},"summary": "$ {env.JOB_NAME} ${env.STAGE_NAME} stage is failed build no-${env.BUILD_NUMBER}.","description": "${env.STAGE_NAME} stage failed.\\n Build URL $BUILD_URL \\n Build Number {env.BUILD_NUMBER} ","issuetype": {"name": "Task"}}}' -H "Content-Type: application/json" https://vamsisanagala.atlassian.net/rest/api/2/issue""")
