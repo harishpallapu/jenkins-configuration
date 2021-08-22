@@ -107,30 +107,43 @@ pipeline {
 				}
 	}
 	 stage('DAST') {
-            steps {
-			catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-	    			sh '''mkdir dast-testing
-					cd dast-testing
-					wget https://github.com/Arachni/arachni/releases/download/v1.5.1/arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
-					tar -xvzf arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
-					chmod 777 -R *
-					mv arachni-1.5.1-0.5.12 arachni
-					./arachni/bin/arachni http://15.206.168.88:8080/SpringMVCAnnotationShoppingCart/ --checks=* --report-save-path=reports.afr
-					./arachni/bin/arachni_reporter reports.afr --reporter=html:outfile=report-${BUILD_NUMBER}.zip '''			
-            }
+            			steps {
+		   			script {
+						try {
+							sh """mkdir dast-testing
+							cd dast-testing
+							wget https://github.com/Arachni/arachni/releases/download/v1.5.1/arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
+							tar -xvzf arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
+							chmod 777 -R *
+							mv arachni-1.5.1-0.5.12 arachni
+							./arachni/bin/arachni http://${params.TOMCAT_IP}:8080/SpringMVCAnnotationShoppingCart/ --checks=* --report-save-path=reports.afr
+							./arachni/bin/arachni_reporter reports.afr --reporter=html:outfile=report-${BUILD_NUMBER}.zip """			
+            					} catch (err) {
+							echo err.getMessage()
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							JiraFunction()
+							}
+					}
 			}
-	 }
+	}
         stage('jmeter') {
-            steps {
-	    			sh 'pwd'
-				sh 'ls -al'
-				sh "git clone ${params.JMETER_GIT_URL}"
-				sh """cd folder
-					chmod 777 -R *
-					./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
-				
-            }
-        }
+            			steps {
+		   			script {
+						try {
+							sh 'pwd'
+							sh 'ls -al'
+							sh "git clone ${params.JMETER_GIT_URL}"
+							sh """cd folder
+							chmod 777 -R *
+							./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
+            					} catch (err) {
+							echo err.getMessage()
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							JiraFunction()
+							}
+					}
+			}
+		}
 	stage('upload reports to nexus') {
             steps {
 	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
