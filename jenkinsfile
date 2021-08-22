@@ -41,7 +41,7 @@ pipeline {
 						
 						} catch (err) {
 							echo err.getMessage()
-							result = "FAIL"
+							currentBuild.result = 'FAILURE'
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
 							JiraFunction()
 						}
