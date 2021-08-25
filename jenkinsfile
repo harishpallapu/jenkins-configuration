@@ -3,7 +3,7 @@ pipeline {
 	parameters {
 	    string(name: 'SAST_GIT_URL', defaultValue: 'https://github.com/harishpallapu/SourceCode_SAST.git', description: 'sast source code git url')
 	    string(name: 'FUNCTIONAL_WEB_GIT_URL', defaultValue: 'https://github.com/harishpallapu/webtest.git', description: 'functional automation web source code git url')
-	    string(name: 'FUNCTIONAL_MOBILE_GIT_URL', defaultValue: 'https://github.com/harishpallapu/ultranewmobile.git', description: 'functional automation mobile source code git url')
+	    string(name: 'FUNCTIONAL_MOBILE_GIT_URL', defaultValue: 'https://github.com/harishpallapu/mobiletest.git', description: 'functional automation mobile source code git url')
 		string(name: 'JMETER_GIT_URL', defaultValue: 'https://github.com/harishpallapu/folder.git', description: 'jmeter source code git url')
         string(name: 'TOMCAT_IP', defaultValue: '3.109.62.216', description: 'tomcat server ip address')
 		string(name: 'NEXUS_IP', defaultValue: '65.1.134.68', description: 'nexus server ip address')
@@ -101,7 +101,7 @@ pipeline {
 		   			script {
 						try {
 							sh """ git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
-							cd ultranewmobile
+							cd mobiletest
 							mvn test """
 						} catch (err) {
 							echo err.getMessage()
@@ -155,7 +155,7 @@ pipeline {
 	stage('upload reports to nexus') {
             steps {
 	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
-	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip ultranewmobile/src/test/java/com/shoppingcart/Reports/*'
+	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
 				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip folder/OnlineShop_${BUILD_NUMBER}.html/*'
 				
 				sh 'mkdir test-reports'
@@ -201,9 +201,9 @@ pipeline {
 		JMETER REPORTS
 		http://${params.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/jmeterreport-${BUILD_NUMBER}.zip
 		
-		The pipeline is successfull and this mail is to request for QA signoff and proceed to UAT or PROD ENV
+		THE PIPELINE IS SUCCESSFULL AND THIS MAIL IS TO REQUEST FOR QA SIGNOFF AND PROCEED TO UAT 0R PROD ENV
 		
-		FOR MORE INFORMATION PLEASE CONTACT DEVSECOPS TEAM...........!"""
+		For more information please contact DEVSECOPS team...........!"""
 		jiraSendBuildInfo site: 'vamsisanagala.atlassian.net'
 		cleanWs(cleanWhenNotBuilt: false,
                     deleteDirs: true,
