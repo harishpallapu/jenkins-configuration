@@ -133,7 +133,7 @@ pipeline {
 					}
 			}
 	}
-        stage('jmeter') {
+        stage('Performance') {
             			steps {
 		   			script {
 						try {
@@ -200,6 +200,8 @@ pipeline {
 		-----------------------------------------------------------------------------------------------------------------------------------------
 		JMETER REPORTS
 		http://${params.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/jmeterreport-${BUILD_NUMBER}.zip
+		
+		The pipeline is successfull and this mail is to request for QA signoff and proceed to UAT or PROD ENV
 		
 		FOR MORE INFORMATION PLEASE CONTACT DEVSECOPS TEAM...........!"""
 		jiraSendBuildInfo site: 'vamsisanagala.atlassian.net'
