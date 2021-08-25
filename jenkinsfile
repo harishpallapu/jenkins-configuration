@@ -5,8 +5,8 @@ pipeline {
 	    string(name: 'FUNCTIONAL_WEB_GIT_URL', defaultValue: 'https://github.com/harishpallapu/webtest.git', description: 'functional automation web source code git url')
 	    string(name: 'FUNCTIONAL_MOBILE_GIT_URL', defaultValue: 'https://github.com/harishpallapu/mobiletest.git', description: 'functional automation mobile source code git url')
 		string(name: 'JMETER_GIT_URL', defaultValue: 'https://github.com/harishpallapu/folder.git', description: 'jmeter source code git url')
-        string(name: 'TOMCAT_IP', defaultValue: '3.109.62.216', description: 'tomcat server ip address')
-		string(name: 'NEXUS_IP', defaultValue: '65.1.134.68', description: 'nexus server ip address')
+        string(name: 'TOMCAT_IP', defaultValue: '3.108.60.228', description: 'tomcat server ip address')
+		string(name: 'NEXUS_IP', defaultValue: '35.154.147.244', description: 'nexus server ip address')
     }
     stages {
         stage('source code checkout') {
