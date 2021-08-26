@@ -3,7 +3,7 @@ pipeline {
     stages {
             stage('load parameters') { 
             steps {
-                load "externalvars.groovy"
+                load "parameters.groovy"
             }
         }
         stage('source code checkout') {
