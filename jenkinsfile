@@ -1,18 +1,15 @@
 pipeline {
     agent any
-	parameters {
-	    string(name: 'SAST_GIT_URL', defaultValue: 'https://github.com/harishpallapu/SourceCode_SAST.git', description: 'sast source code git url')
-	    string(name: 'FUNCTIONAL_WEB_GIT_URL', defaultValue: 'https://github.com/harishpallapu/webtest.git', description: 'functional automation web source code git url')
-	    string(name: 'FUNCTIONAL_MOBILE_GIT_URL', defaultValue: 'https://github.com/harishpallapu/mobiletest.git', description: 'functional automation mobile source code git url')
-		string(name: 'JMETER_GIT_URL', defaultValue: 'https://github.com/harishpallapu/folder.git', description: 'jmeter source code git url')
-        string(name: 'TOMCAT_IP', defaultValue: '3.108.60.228', description: 'tomcat server ip address')
-		string(name: 'NEXUS_IP', defaultValue: '35.154.147.244', description: 'nexus server ip address')
-    }
     stages {
+            stage('load parameters') { 
+            steps {
+                load "externalvars.groovy"
+            }
+        }
         stage('source code checkout') {
             steps {
-                git "${params.SAST_GIT_URL}"
-				sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
+               	 			git "${env.SAST_GIT_URL}"
+					sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
             }
         }
         stage('SAST analysis') {
@@ -69,7 +66,7 @@ pipeline {
 					script {
 						try {
 							sshagent(['deploy_user']) {
-							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${params.TOMCAT_IP}:/opt/tomcat/webapps"		
+							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
 						}
 						} catch (err) {
 							echo err.getMessage()
@@ -84,7 +81,7 @@ pipeline {
            			steps {
 		   			script {
 						try {
-							sh """git clone ${params.FUNCTIONAL_WEB_GIT_URL}
+							sh """git clone ${env.FUNCTIONAL_WEB_GIT_URL}
 							cd webtest
 							mvn test """
 						} catch (err) {
@@ -100,7 +97,7 @@ pipeline {
             				steps {
 		   			script {
 						try {
-							sh """ git clone ${params.FUNCTIONAL_MOBILE_GIT_URL}
+							sh """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL}
 							cd mobiletest
 							mvn test """
 						} catch (err) {
@@ -122,7 +119,7 @@ pipeline {
 							tar -xvzf arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
 							chmod 777 -R *
 							mv arachni-1.5.1-0.5.12 arachni
-							./arachni/bin/arachni http://${params.TOMCAT_IP}:8080/SpringMVCAnnotationShoppingCart/ --checks=* --report-save-path=reports.afr
+							./arachni/bin/arachni http://${env.TOMCAT_IP}:8080/SpringMVCAnnotationShoppingCart/ --checks=* --report-save-path=reports.afr
 							./arachni/bin/arachni_reporter reports.afr --reporter=html:outfile=report-${BUILD_NUMBER}.zip """			
             					} catch (err) {
 							echo err.getMessage()
@@ -139,7 +136,7 @@ pipeline {
 						try {
 							sh 'pwd'
 							sh 'ls -al'
-							sh "git clone ${params.JMETER_GIT_URL}"
+							sh "git clone ${env.JMETER_GIT_URL}"
 							sh """cd folder
 							chmod 777 -R *
 							./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
@@ -169,11 +166,11 @@ pipeline {
 				sh """
 				    cd test-reports
 				    mv report-task.txt report-task-${BUILD_NUMBER}.txt
-				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/
-				    curl --upload-file web-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/
-				    curl --upload-file mobile-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/
-				    curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
-				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://${params.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/ """
+				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/
+				    curl --upload-file web-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/
+				    curl --upload-file mobile-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/
+				    curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
+				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/ """
             }
         }
 	}
@@ -187,19 +184,19 @@ pipeline {
 		Please find build reports................................!
 		
 		SAST REPORTS
-		http://${params.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/report-task-${BUILD_NUMBER}.txt
+		http://${env.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/report-task-${BUILD_NUMBER}.txt
 		--------------------------------------------------------------------------------------------------------------------------------------
 		FUNCTIONAL AUTOMATION WEB REPORTS
-		http://${params.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/web-test-report-${BUILD_NUMBER}.zip
+		http://${env.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/web-test-report-${BUILD_NUMBER}.zip
 		----------------------------------------------------------------------------------------------------------------------------------------
 		FUNCTIONAL AUTOMATION MOBILE REPORTS
-		http://${params.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/mobile-test-report-${BUILD_NUMBER}.zip
+		http://${env.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/mobile-test-report-${BUILD_NUMBER}.zip
 		------------------------------------------------------------------------------------------------------------------------------------------
 		DAST REPORTS
-		http://${params.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/report-${BUILD_NUMBER}.zip
+		http://${env.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/report-${BUILD_NUMBER}.zip
 		-----------------------------------------------------------------------------------------------------------------------------------------
 		JMETER REPORTS
-		http://${params.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/jmeterreport-${BUILD_NUMBER}.zip
+		http://${env.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/jmeterreport-${BUILD_NUMBER}.zip
 		
 		THE PIPELINE IS SUCCESSFULL AND THIS MAIL IS TO REQUEST FOR QA SIGNOFF AND PROCEED TO UAT 0R PROD ENV
 		
