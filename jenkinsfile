@@ -151,8 +151,8 @@ pipeline {
 		}
 	stage('upload reports to nexus') {
             steps {
-	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
-	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
+	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/target/surefire-reports/*'
+	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/target/surefire-reports/*'
 				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip folder/OnlineShop_${BUILD_NUMBER}.html/*'
 				
 				sh 'mkdir test-reports'
