@@ -10,7 +10,7 @@ F:\Jmeterinfo
 Flexibadmin1 Infotech@12345678
 
 jmeter.bat -n -t E:\OnlineShop_1.jmx -l E:\OnlineShop_result.jtl -e -o E:\OnlineShop_1.html
- hi
+
 #shell script to push to github with single command with below #create alias for above script
 
 alias singlepush="sh singlepush.sh"
