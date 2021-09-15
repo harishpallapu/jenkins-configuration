@@ -10,7 +10,7 @@ if [[ -z "${message// }" ]]
 fi
 
 # stage all changes
-git add .
+git add parameters.groovy
 echo "Staged all files"
 
 # add commit
