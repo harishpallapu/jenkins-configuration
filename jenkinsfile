@@ -7,6 +7,7 @@ pipeline {
             }
         }
         stage('source code checkout') {
+		when { expression { env.SAST_GIT_URL != null } }
             steps {
                	 			git "${env.SAST_GIT_URL}"
 					sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
@@ -62,6 +63,7 @@ pipeline {
             }
 	 }
 	stage('deploy to tomcat') {
+	when { expression { env.TOMCAT_IP != null } }
             			steps {
 					script {
 						try {
@@ -78,6 +80,7 @@ pipeline {
 				}
 	}
 	stage('FunctionalAutomation_Web') {
+	when { expression { env.FUNCTIONAL_WEB_GIT_URL != null } }
            			steps {
 		   			script {
 						try {
@@ -94,6 +97,7 @@ pipeline {
 	 		}
 	 }
 	stage('FunctionalAutomation_Mobile') {
+	when { expression { env.FUNCTIONAL_MOBILE_GIT_URL != null } }
             				steps {
 		   			script {
 						try {
@@ -131,6 +135,7 @@ pipeline {
 			}
 	}
         stage('Performance') {
+		when { expression { env.JMETER_GIT_URL != null } }
             			steps {
 		   			script {
 						try {
@@ -150,6 +155,7 @@ pipeline {
 			}
 		}
 	stage('upload reports to nexus') {
+	when { expression { env.NEXUS_IP != null } }
             steps {
 	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
 	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
