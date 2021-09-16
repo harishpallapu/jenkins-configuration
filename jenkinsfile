@@ -6,7 +6,7 @@ pipeline {
                 load "parameters.groovy"
        }
         stage('source code checkout') {
-		when { 
+		  when { 
 		expression { env.SAST_GIT_URL != null } 
 		}
             steps {
