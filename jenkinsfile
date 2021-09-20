@@ -2,30 +2,25 @@ pipeline {
     agent any
 
     stages {
-                    stage('load parameters') { 
+        stage('test') {
             steps {
-                load "parameters.groovy"
+                sh 'echo hello'
             }
         }
-        stage('Build') {
+        stage('test1') {
             steps {
-            if (env.SAST_GIT_URL == 'null') {
-                echo " sast value ${env.SAST_GIT_URL}............................ "
-           } else {
-               echo " sast value ${env.SAST_GIT_URL}............................ "
-        }
-        }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-                echo " sast value ${env.SAST_GIT_URL}............................ "
-
+                sh 'echo $TEST'
             }
         }
-        stage('Deploy') {
+        stage('test3') {
             steps {
-                echo 'Deploying....'
+                script {
+                    if (env.BRANCH_NAME == 'master') {
+                        echo 'I only execute on the master branch'
+                    } else {
+                        echo 'I execute elsewhere'
+                    }
+                }
             }
         }
     }
