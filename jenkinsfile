@@ -82,10 +82,10 @@ pipeline {
 						if (env.TOMCAT_IP != 'null') {
 							sshagent(['deploy_user']) {
 							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
-					        } else {
+					        }
+						} else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'
                                                         }
-						}
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
