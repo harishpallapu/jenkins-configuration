@@ -36,7 +36,7 @@ pipeline {
 						try {
 							sh 'wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.2.2/dependency-check-6.2.2-release.zip'
 							sh 'unzip -q dependency-check-6.2.2-release.zip'
-							sh './dependency-check/bin/dependency-check.sh --noupdate --project "TeachersFCU" --scan "Shoppingcart/lib/" --format HTML --out .'
+							sh './dependency-check/bin/dependency-check.sh --noupdate --project "TeachersFCU" --scan "sast-code/Shoppingcart/lib/" --format HTML --out .'
 						
 						} catch (err) {
 							echo err.getMessage()
@@ -52,8 +52,11 @@ pipeline {
             steps {
 				script {
 						try {
-						if (env.SAST_GIT_URL != 'null') {
-							sh 'mvn clean package'
+						if (env.BUILD_GIT_URL != 'null') {
+							sh "git clone ${env.BUILD_GIT_URL} build-code"
+							sh '''
+							cd build-code
+							mvn clean package'''
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'
                                                         }
