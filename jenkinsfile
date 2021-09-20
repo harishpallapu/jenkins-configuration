@@ -11,12 +11,11 @@ pipeline {
 			      script {
 						try {
 						if (env.SAST_GIT_URL != 'null') {
-               	 			                git "${env.SAST_GIT_URL}"
+               	 			                sh 'git clone ${env.SAST_GIT_URL} sast-code'
 					                sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
-							sh 'cp -r sonarqube-scanner-scripts/* .'
-							sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
-							sh 'ls -al'
-							sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
+							sh 'cp -r sonarqube-scanner-scripts/* sast-code'
+							sh './sast-code/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
+							sh 'cat ./sast-code/scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
 					        } else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"
                                                         }
@@ -35,7 +34,7 @@ pipeline {
 						try {
 							sh 'wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.2.2/dependency-check-6.2.2-release.zip'
 							sh 'unzip -q dependency-check-6.2.2-release.zip'
-							sh './dependency-check/bin/dependency-check.sh --noupdate --project "TeachersFCU" --scan "Shoppingcart/lib/" --format HTML --out .'
+							sh './dependency-check/bin/dependency-check.sh --noupdate --project "TeachersFCU" --scan "sast-code/Shoppingcart/lib/" --format HTML --out .'
 						
 						} catch (err) {
 							echo err.getMessage()
@@ -52,7 +51,10 @@ pipeline {
 				script {
 						try {
 						if (env.SAST_GIT_URL != 'null') {
-							sh 'mvn clean package'
+							sh 'git clone ${env.BUILD_URL} build-code'
+							sh '''
+							cd build-code
+							mvn clean package'''
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'
                                                         }
@@ -71,7 +73,7 @@ pipeline {
 						try {
 						if (env.TOMCAT_IP != 'null') {
 							sshagent(['deploy_user']) {
-							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
+							sh "scp -o StrictHostKeyChecking=no build-code/target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
 					        }
 						} else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"
@@ -90,7 +92,7 @@ pipeline {
 		   			script {
 						try {
 						if (env.FUNCTIONAL_WEB_GIT_URL != 'null') {
-							sh """git clone ${env.FUNCTIONAL_WEB_GIT_URL}
+							sh """git clone ${env.FUNCTIONAL_WEB_GIT_URL} webtest
 							cd webtest
 							mvn test """
 					        } else {
@@ -110,7 +112,7 @@ pipeline {
 		   			script {
 						try {
 						if (env.SAST_GIT_URL != 'null') {
-							sh """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL}
+							sh """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL} mobiletest
 							cd mobiletest
 							mvn test """
 					        } else {
@@ -153,8 +155,8 @@ pipeline {
 						if (env.JMETER_GIT_URL != 'null') {
 							sh 'pwd'
 							sh 'ls -al'
-							sh "git clone ${env.JMETER_GIT_URL}"
-							sh """cd folder
+							sh "git clone ${env.JMETER_GIT_URL} jmeter-test"
+							sh """cd jmeter-test
 							chmod 777 -R *
 							./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
 					        } else {
@@ -173,11 +175,11 @@ pipeline {
             steps {
 	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
 	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
-				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip folder/OnlineShop_${BUILD_NUMBER}.html/*'
+				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip jmeter-test/OnlineShop_${BUILD_NUMBER}.html/*'
 				
 				sh 'mkdir test-reports'
 				
-				sh 'cp .scannerwork/report-task.txt test-reports'
+				sh 'cp ./sast-code/scannerwork/report-task.txt test-reports'
 				sh 'cp jmeterreport-${BUILD_NUMBER}.zip test-reports'
 				sh 'cp web-test-report-$BUILD_NUMBER.zip test-reports'
 				sh 'cp mobile-test-report-$BUILD_NUMBER.zip test-reports'
