@@ -4,22 +4,32 @@ pipeline {
             stage('load parameters') { 
             steps {
                 load "parameters.groovy"
-       }
+            }
+        }
         stage('source code checkout') {
-                    when { expression { env.SAST_GIT_URL == null } }
-                      steps {
-             	 		git "${env.SAST_GIT_URL}"
+            steps {
+                script {
+                    if (env.SAST_GIT_URL != 'null') {
+               	 			git "${env.SAST_GIT_URL}"
 					sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
+                    } else {
+                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                    }
+                }
             }
         }
         stage('SAST analysis') {
             steps {
 			      script {
 						try {
+						if (env.SAST_GIT_URL != 'null') {
 							sh 'cp -r sonarqube-scanner-scripts/* .'
 							sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
 							sh 'ls -al'
 							sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
+					        } else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                                                        }
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
@@ -51,7 +61,11 @@ pipeline {
             steps {
 				script {
 						try {
+						if (env.SAST_GIT_URL != 'null') {
 							sh 'mvn clean package'
+					        } else {
+                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                                                        }
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
@@ -62,15 +76,16 @@ pipeline {
             }
 	 }
 	stage('deploy to tomcat') {
-	when { 
-	expression { env.TOMCAT_IP != null }
-	}
             			steps {
 					script {
 						try {
+						if (env.TOMCAT_IP != 'null') {
 							sshagent(['deploy_user']) {
 							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
-						}
+					        }
+						} else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                                                        }
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
@@ -81,15 +96,16 @@ pipeline {
 				}
 	}
 	stage('FunctionalAutomation_Web') {
-	when { 
-	expression { env.FUNCTIONAL_WEB_GIT_URL != null } 
-	}
            			steps {
 		   			script {
 						try {
+						if (env.FUNCTIONAL_WEB_GIT_URL != 'null') {
 							sh """git clone ${env.FUNCTIONAL_WEB_GIT_URL}
 							cd webtest
 							mvn test """
+					        } else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                                                        }
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
@@ -100,15 +116,16 @@ pipeline {
 	 		}
 	 }
 	stage('FunctionalAutomation_Mobile') {
-	when { 
-	expression { env.FUNCTIONAL_MOBILE_GIT_URL != null } 
-	}
             				steps {
 		   			script {
 						try {
+						if (env.SAST_GIT_URL != 'null') {
 							sh """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL}
 							cd mobiletest
 							mvn test """
+					        } else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                                                        }
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
@@ -140,18 +157,19 @@ pipeline {
 			}
 	}
         stage('Performance') {
-		when { 
-		expression { env.JMETER_GIT_URL != null } 
-		}
             			steps {
 		   			script {
 						try {
+						if (env.JMETER_GIT_URL != 'null') {
 							sh 'pwd'
 							sh 'ls -al'
 							sh "git clone ${env.JMETER_GIT_URL}"
 							sh """cd folder
 							chmod 777 -R *
 							./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
+					        } else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                                                        }
             					} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
@@ -162,9 +180,6 @@ pipeline {
 			}
 		}
 	stage('upload reports to nexus') {
-	when { 
-	expression { env.NEXUS_IP != null } 
-	}
             steps {
 	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
 	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
