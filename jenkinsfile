@@ -1,28 +1,25 @@
 pipeline {
     agent any
+       environment {
+       load "parameters.groovy"
+    }
 
     stages {
-                stage('load parameters') { 
-            steps {
-                load "parameters.groovy"
-                sh "NULL-CONDTION = $env.SAST_GIT_URL"
-            }
-        }
         stage('Build') {
                     when {
                     expression {
-                    NULL-CONDTION != null
+                    env.SAST_GIT_URL != null
                     }
                     }
             steps {
                 echo 'Building..'
-                echo " sast value ${NULL-CONDTION}............................ "
+                echo " sast value ${env.SAST_GIT_URL}............................ "
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                echo " sast value ${NULL-CONDTION}............................ "
+                echo " sast value ${env.SAST_GIT_URL}............................ "
 
             }
         }
