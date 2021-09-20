@@ -50,8 +50,8 @@ pipeline {
             steps {
 				script {
 						try {
-						if (env.SAST_GIT_URL != 'null') {
-							sh 'git clone ${env.BUILD_URL} build-code'
+						if (env.BUILD_GIT_URL != 'null') {
+							sh 'git clone ${env.BUILD_GIT_URL} build-code'
 							sh '''
 							cd build-code
 							mvn clean package'''
