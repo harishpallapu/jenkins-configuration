@@ -6,29 +6,28 @@ pipeline {
                 load "parameters.groovy"
             }
         }
-        stage('SAST analysis') {
+        stage('source code checkout') {
             steps {
-	        script {
-						try {
-						if (env.SAST_GIT_URL != 'null') {
-	               	 			git "${env.SAST_GIT_URL}"
-						sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'					
-							sh 'cp -r sonarqube-scanner-scripts/* .'
-							sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
-							sh 'ls -al'
-							sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
-					        } else {
-                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
-                                                        }
-						} catch (err) {
-							echo err.getMessage()
-							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							JiraFunction()
-						}   
-					}
-			}
-	}
+                script {
+				    try {
+                    if (env.SAST_GIT_URL != 'null') {
+               	 			            git "${env.SAST_GIT_URL}"
+					                    sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
+							            sh 'cp -r sonarqube-scanner-scripts/* .'
+							            sh './sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
+							            sh 'ls -al'
+							            sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
+                    } else {
+                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                    } 
+					} catch (err)  
+					                    echo err.getMessage()
+										unstable(message: "${STAGE_NAME} is unstable")
+										echo "Error detected, ${env.STAGE_NAME} failed..................!"
+										JiraFunction()
+                }
+            }
+        }
         stage('SCA') {
             steps {
 			      script {
