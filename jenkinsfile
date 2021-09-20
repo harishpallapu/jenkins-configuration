@@ -75,7 +75,7 @@ pipeline {
 						try {
 						if (env.TOMCAT_IP != 'null') {
 							sshagent(['deploy_user']) {
-							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
+							sh "scp -o StrictHostKeyChecking=no build-code/target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
 					        }
 						} else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"
@@ -157,8 +157,8 @@ pipeline {
 						if (env.JMETER_GIT_URL != 'null') {
 							sh 'pwd'
 							sh 'ls -al'
-							sh "git clone ${env.JMETER_GIT_URL}"
-							sh """cd folder
+							sh "git clone ${env.JMETER_GIT_URL} jmeter-code"
+							sh """cd jmeter-code
 							chmod 777 -R *
 							./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
 					        } else {
@@ -177,11 +177,11 @@ pipeline {
             steps {
 	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
 	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
-				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip folder/OnlineShop_${BUILD_NUMBER}.html/*'
+				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip jmeter-code/OnlineShop_${BUILD_NUMBER}.html/*'
 				
 				sh 'mkdir test-reports'
 				
-				sh 'cp .scannerwork/report-task.txt test-reports'
+				sh 'cp ./sast-code/scannerwork/report-task.txt test-reports'
 				sh 'cp jmeterreport-${BUILD_NUMBER}.zip test-reports'
 				sh 'cp web-test-report-$BUILD_NUMBER.zip test-reports'
 				sh 'cp mobile-test-report-$BUILD_NUMBER.zip test-reports'
