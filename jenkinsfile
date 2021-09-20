@@ -8,7 +8,7 @@ pipeline {
         }
         stage('SAST analysis') {
             steps {
-			      script {
+	        script {
 						try {
 						if (env.SAST_GIT_URL != 'null') {
 	               	 			git "${env.SAST_GIT_URL}"
