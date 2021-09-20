@@ -5,23 +5,24 @@ pipeline {
                 stage('load parameters') { 
             steps {
                 load "parameters.groovy"
+                sh "NULL-CONDTION = $env.SAST_GIT_URL"
             }
         }
         stage('Build') {
                     when {
                     expression {
-                    "env.SAST_GIT_URL" != null
+                    NULL-CONDTION != null
                     }
                     }
             steps {
                 echo 'Building..'
-                echo " sast value ${env.SAST_GIT_URL}............................ "
+                echo " sast value ${NULL-CONDTION}............................ "
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                echo " sast value ${env.SAST_GIT_URL}............................ "
+                echo " sast value ${NULL-CONDTION}............................ "
 
             }
         }
