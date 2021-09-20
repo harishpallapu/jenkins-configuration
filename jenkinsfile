@@ -11,10 +11,10 @@ pipeline {
 			      script {
 						try {
 						if (env.SAST_GIT_URL != 'null') {
-               	 			                sh 'git clone ${env.SAST_GIT_URL} sast-code'
-					                sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
-							sh 'cp -r sonarqube-scanner-scripts/* sast-code'
-							sh './sast-code/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner'
+               	 			                sh "git clone ${env.SAST_GIT_URL} sast-code"
+					                sh "git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git"
+							sh "cp -r sonarqube-scanner-scripts/* sast-code"
+							sh "./sast-code/sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner"
 							sh 'cat ./sast-code/scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
 					        } else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"
