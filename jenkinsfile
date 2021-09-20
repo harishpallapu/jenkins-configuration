@@ -8,8 +8,8 @@ pipeline {
         }
         stage('SAST analysis') {
             steps {
+                    when { expression { env.SAST_GIT_URL != null } }
 			      script {
-                    when { expression { env.SAST_GIT_URL == null } }
 						try {
                	 			                git "${env.SAST_GIT_URL}"
 					                sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
