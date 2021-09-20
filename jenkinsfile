@@ -13,7 +13,7 @@ pipeline {
                	 			git "${env.SAST_GIT_URL}"
 					sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
                     } else {
-                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
                     }
                 }
             }
@@ -28,7 +28,7 @@ pipeline {
 							sh 'ls -al'
 							sh 'cat .scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
 					        } else {
-                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
                                                         }
 						} catch (err) {
 							echo err.getMessage()
@@ -84,7 +84,7 @@ pipeline {
 							sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@${env.TOMCAT_IP}:/opt/tomcat/webapps"		
 					        }
 						} else {
-                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
                                                         }
 						} catch (err) {
 							echo err.getMessage()
@@ -104,7 +104,7 @@ pipeline {
 							cd webtest
 							mvn test """
 					        } else {
-                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
                                                         }
 						} catch (err) {
 							echo err.getMessage()
@@ -124,7 +124,7 @@ pipeline {
 							cd mobiletest
 							mvn test """
 					        } else {
-                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
                                                         }
 						} catch (err) {
 							echo err.getMessage()
@@ -168,7 +168,7 @@ pipeline {
 							chmod 777 -R *
 							./apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter -n -t OnlineShop_1.jmx -l OnlineShop_result_${BUILD_NUMBER}.jtl -e -o OnlineShop_${BUILD_NUMBER}.html """
 					        } else {
-                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
                                                         }
             					} catch (err) {
 							echo err.getMessage()
