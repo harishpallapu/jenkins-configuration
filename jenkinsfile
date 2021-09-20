@@ -18,6 +18,7 @@ pipeline {
 							sh 'cat ./sast-code/scannerwork/report-task.txt  | mail -s "Build-no-${BUILD_NUMBER}-sonar-reports-sucessfull" nihas0505@gmail.com'
 					        } else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"
+						}
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
