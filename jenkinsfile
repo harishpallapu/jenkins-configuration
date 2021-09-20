@@ -26,6 +26,8 @@ pipeline {
 			}
 	}
         stage('SCA') {
+                    when { expression { env.SAST_GIT_URL != null } }
+
             steps {
 			      script {
 						try {
