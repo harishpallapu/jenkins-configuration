@@ -1,14 +1,16 @@
 pipeline {
     agent any
-       environment {
-       load "parameters.groovy"
-    }
 
     stages {
+                    stage('load parameters') { 
+            steps {
+                load "parameters.groovy"
+            }
+        }
         stage('Build') {
                     when {
                     expression {
-                    env.SAST_GIT_URL != null
+                    env.SAST_GIT_URL.isEmpty()
                     }
                     }
             steps {
