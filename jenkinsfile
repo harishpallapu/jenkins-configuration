@@ -30,7 +30,7 @@ pipeline {
 					}
 			}
 	}
-        stage('SCA') {
+        /*stage('SCA') {
             steps {
 			      script {
 						try {
@@ -196,7 +196,7 @@ pipeline {
 				    curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
 				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/ """
             }
-        }
+        }*/
 	}
 	post {
         // Clean after build
