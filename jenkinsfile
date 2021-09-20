@@ -174,28 +174,34 @@ pipeline {
 			}
 		}
 	stage('upload reports to nexus') {
-            steps {
-	    			sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
-	    			sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
-				sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip jmeter-code/OnlineShop_${BUILD_NUMBER}.html/*'
+                                 steps {
+		   			script {
+						if (env.NEXUS_IP != 'null') {
+	    			                   sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
+	    			                   sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
+				                   sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip jmeter-code/OnlineShop_${BUILD_NUMBER}.html/*'
 				
-				sh 'mkdir test-reports'
+				                  sh 'mkdir test-reports'
 				
-				sh 'cp ./sast-code/scannerwork/report-task.txt test-reports'
-				sh 'cp jmeterreport-${BUILD_NUMBER}.zip test-reports'
-				sh 'cp web-test-report-$BUILD_NUMBER.zip test-reports'
-				sh 'cp mobile-test-report-$BUILD_NUMBER.zip test-reports'
-				sh 'cp -r dast-testing/report-${BUILD_NUMBER}.zip test-reports'
+				                  sh 'cp ./sast-code/scannerwork/report-task.txt test-reports'
+				                  sh 'cp jmeterreport-${BUILD_NUMBER}.zip test-reports'
+				                  sh 'cp web-test-report-$BUILD_NUMBER.zip test-reports'
+				                  sh 'cp mobile-test-report-$BUILD_NUMBER.zip test-reports'
+				                  sh 'cp -r dast-testing/report-${BUILD_NUMBER}.zip test-reports'
 				
-				sh """
-				    cd test-reports
-				    mv report-task.txt report-task-${BUILD_NUMBER}.txt
-				    curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/
-				    curl --upload-file web-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/
-				    curl --upload-file mobile-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/
-				    curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
-				    curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/ """
-            }
+				                  sh """
+				                  cd test-reports
+				                  mv report-task.txt report-task-${BUILD_NUMBER}.txt
+				                  curl --upload-file report-task-${BUILD_NUMBER}.txt -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/sast-reports/
+				                 curl --upload-file web-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/web-test-reports/
+				                 curl --upload-file mobile-test-report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/mobile-test-reports/
+				                 curl --upload-file report-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/dast-reports/
+				                 curl --upload-file jmeterreport-${BUILD_NUMBER}.zip -u admin:admin -v http://${env.NEXUS_IP}:8081/repository/jenkins-reports/jmeter-reports/ """
+					        } else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"
+                                                        }
+					}
+	    }
         }
 	}
 	post {
