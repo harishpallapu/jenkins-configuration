@@ -12,6 +12,7 @@ pipeline {
 
             steps {
                 echo 'Building..'
+                echo ' sast value ${env.SAST_GIT_URL}............................ '
             }
         }
         stage('Test') {
