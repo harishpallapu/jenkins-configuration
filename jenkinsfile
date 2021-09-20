@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
                     when {
                     expression {
-                    env.SAST_GIT_URL.isEmpty()
+                    env.SAST_GIT_URL.isEmpty() != null
                     }
                     }
             steps {
