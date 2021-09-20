@@ -7,6 +7,7 @@ pipeline {
             }
         }
         stage('source code checkout') {
+	                    when { expression { env.SAST_GIT_URL == null } }
             steps {
                	 			git "${env.SAST_GIT_URL}"
 					sh 'git clone https://github.com/harishpallapu/sonarqube-scanner-scripts.git'
