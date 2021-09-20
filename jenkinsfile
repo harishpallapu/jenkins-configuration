@@ -8,15 +8,13 @@ pipeline {
             }
         }
         stage('Build') {
-                    when {
-                    expression {
-                    env.SAST_GIT_URL.isEmpty() == null
-                    }
-                    }
             steps {
-                echo 'Building..'
+            if (env.SAST_GIT_URL == 'null') {
                 echo " sast value ${env.SAST_GIT_URL}............................ "
-            }
+           } else {
+               echo " sast value ${env.SAST_GIT_URL}............................ "
+        }
+        }
         }
         stage('Test') {
             steps {
