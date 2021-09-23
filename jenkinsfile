@@ -177,7 +177,7 @@ pipeline {
                                  steps {
 		   			script {
 						if (env.NEXUS_IP != 'null') {
-	    			                   sh 'zip -r web-test-report-${BUILD_NUMBER}.zip webtest/src/test/java/com/shoppingcart/Reports/*'
+	    			                   sh 'zip -r web-test-report-${BUILD_NUMBER}.zip . -i webtest/src/test/java/com/shoppingcart/Reports/*'
 	    			                   sh 'zip -r mobile-test-report-${BUILD_NUMBER}.zip mobiletest/src/test/java/com/shoppingcart/Reports/*'
 				                   sh 'zip -r jmeterreport-${BUILD_NUMBER}.zip jmeter-code/OnlineShop_${BUILD_NUMBER}.html/*'
 				
