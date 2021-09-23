@@ -183,7 +183,7 @@ pipeline {
 				
 				                  sh 'mkdir test-reports'
 				
-				                  sh 'cp /sast-code/scannerwork/report-task.txt test-reports'
+				                  sh 'cp ./sast-code/scannerwork/report-task.txt test-reports'
 				                  sh 'cp jmeterreport-${BUILD_NUMBER}.zip test-reports'
 				                  sh 'cp web-test-report-$BUILD_NUMBER.zip test-reports'
 				                  sh 'cp mobile-test-report-$BUILD_NUMBER.zip test-reports'
