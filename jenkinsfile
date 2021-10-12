@@ -8,6 +8,7 @@ pipeline {
         }
         stage('source code checkout') {
             steps {
+                script {	    
 	                    if (env.SAST_GIT_URL != 'null') {    
                	 			git "${env.SAST_GIT_URL}"
                     } else {
@@ -15,6 +16,7 @@ pipeline {
 					}
             }
         }
+	}
         stage('SAST analysis') {
             steps {
 			      script {
