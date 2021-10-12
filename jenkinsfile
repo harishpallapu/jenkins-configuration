@@ -119,8 +119,9 @@ pipeline {
             			steps {
 		   			script {
 						try {
-							bat '''dir
+							bat '''
                             git clone ${env.JMETER_GIT_URL}
+			    dir
                             cd folder
                             jmeter.bat -n -t C:/Windows/system32/config\\systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.jmx -l C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_result.jtl -e -o C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.html
             					 '''
