@@ -119,12 +119,12 @@ pipeline {
             			steps {
 		   			script {
 						try {
-							bat '''
+							bat """
                             git clone ${env.JMETER_GIT_URL}
 			    dir
                             cd folder
                             jmeter.bat -n -t C:/Windows/system32/config\\systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.jmx -l C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_result.jtl -e -o C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.html
-            					 '''
+            					 """
             					} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
