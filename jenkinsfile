@@ -59,7 +59,7 @@ pipeline {
 							bat 'mvn clean package'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'							
-						} catch (err) {
+					}	} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
@@ -67,7 +67,7 @@ pipeline {
 						}
 				}							
             }
-	 }
+	 
 	stage('deploy to tomcat') {
             			steps {
 					script {
@@ -76,7 +76,7 @@ pipeline {
             deploy adapters: [tomcat8(credentialsId: 'f9e5d28d-6a35-4704-a1bd-6676011dd79a', path: '', url: '${env.TOMCAT_IP}')], contextPath: null, onFailure: false, war: '**/*.war'
 						} else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"	    
-						} catch (err) {
+					}	} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
@@ -84,7 +84,7 @@ pipeline {
 						}		
 					}
 				}
-	}
+	
 	stage('FunctionalAutomation_Web') {
            			steps {
 		   			script {
@@ -95,7 +95,7 @@ pipeline {
 							mvn test """
 					        } else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"							
-						} catch (err) {
+					}	} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
@@ -103,7 +103,7 @@ pipeline {
 						}					
 					}
 	 		}
-	 }
+	 
 	stage('FunctionalAutomation_Mobile') {
             				steps {
 		   			script {
@@ -114,7 +114,7 @@ pipeline {
 							mvn test """
 					        } else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"							
-						} catch (err) {
+				}		} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
@@ -122,7 +122,7 @@ pipeline {
 							}
 					}
 				}
-	}
+	
 	 stage('DAST') {
             			steps {
 		   			script {
@@ -152,7 +152,7 @@ pipeline {
             					 """
 					        } else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"						 
-            					} catch (err) {
+            				}	} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
@@ -160,7 +160,7 @@ pipeline {
 							}
 					}
 			}
-		} 
+		
         stage('Nexus') {
             steps {
                 powershell 'mkdir test-reports'
@@ -169,7 +169,7 @@ pipeline {
                 move report-task.txt report-task-${BUILD_NUMBER}.txt'''
                            }
         }         
-    }
+    
  	post {
         // Clean after build
         always {
@@ -178,4 +178,4 @@ pipeline {
         body: "${env.BUILD_URL} has result ${currentBuild.result}"
         }
     }     
-}
+
