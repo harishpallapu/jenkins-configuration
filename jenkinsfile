@@ -119,7 +119,7 @@ pipeline {
             				steps {
 		   			script {
 						try {
-						if (env.SAST_GIT_URL != 'null') {
+						if (env.FUNCTIONAL_MOBILE_GIT_URL != 'null') {
 							sh """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL}
 							cd mobiletest
 							mvn test """
