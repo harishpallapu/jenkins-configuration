@@ -16,3 +16,4 @@ jmeter.bat -n -t E:\OnlineShop_1.jmx -l E:\OnlineShop_result.jtl -e -o E:\Online
 alias singlepush="sh singlepush.sh"
 
 singlepush
+hii
