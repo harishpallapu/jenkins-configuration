@@ -54,14 +54,11 @@ pipeline {
             steps {
 				script {
 						try {
-						if (env.BUILD_GIT_URL != 'null') {
-							sh "git clone ${env.BUILD_GIT_URL} build-code"
-							sh '''
-							cd build-code
-							mvn clean package'''
+						if (env.BUILD_GIT_URL != 'null') {						
+							bat 'mvn clean package'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'
-                                                        }
+                                                        }							
 						} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
@@ -69,6 +66,7 @@ pipeline {
 						}
 				}							
             }
-	 }	
+	 }
+	 }
 		}
 		}
