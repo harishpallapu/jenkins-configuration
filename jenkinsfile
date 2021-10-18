@@ -1,40 +1,38 @@
 pipeline {
     agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M2_HOME"
+    }
     stages {
             stage('load parameters') { 
             steps {
                 load "parameters.groovy"
             }
-        }
-        stage('source code checkout') {
+        }	
+        stage('SAST Analysis') {
             steps {
-                script {	    
-	                    if (env.SAST_GIT_URL != 'null') {    
-               	 			git "${env.SAST_GIT_URL}"
-                    } else {
-                        echo "skipping the stage ${env.STAGE_NAME}.............................!"					
-					}
-            }
-        }
-	}
-        stage('SAST analysis') {
-            steps {
-			      script {
-						try {
-						if (env.SAST_GIT_URL != 'null') {						
+                script {
+                    try {
+                // Get some code from a GitHub repository
+						if (env.SAST_GIT_URL != 'null') {				
+                git '${env.SAST_GIT_URL}'
                 bat "git clone https://github.com/harishpallapu/sonarqube_scannar_windows.git"
                 bat "./sonarqube_scannar_windows/sonar-scanner-4.6.2.2472-windows/bin/sonar-scanner.bat"
-	                    } else {
-                        echo "skipping the stage ${env.STAGE_NAME}.............................!"	
-					}	} catch (err) {
+					        } else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"				
+                    } catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							}
-						}   
-					}
-			}
-	}
+							echo "Error detected, ${env.STAGE_NAME} failed...............!"
+						}                
+                // Run Maven on a Unix agent.
+                //sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        } 
+        }
+		}
         stage('SCA') {
             steps {
 			      script {
@@ -52,132 +50,21 @@ pipeline {
 				}
 
 	    }
-        }
-	stage('build') {
+        }        
+        stage('Build') {
             steps {
 				script {
 						try {
-						if (env.SAST_GIT_URL != 'null') {						
-							bat 'mvn clean package'
+						if (env.BUILD_GIT_URL != 'null') {
+                git '${env.BUILD_GIT_URL}'                 						
+                // To run Maven on a Windows agent, use
+                 bat "mvn clean package"
 					        } else {
-                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'							
-					}	} catch (err) {
-							echo err.getMessage()
-							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							}
-						}
-				}							
+                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'				 
             }
-	 
-	stage('deploy to tomcat') {
-            			steps {
-					script {
-						try {
-						if (env.TOMCAT_IP != 'null') {						
-            deploy adapters: [tomcat8(credentialsId: 'f9e5d28d-6a35-4704-a1bd-6676011dd79a', path: '', url: '${env.TOMCAT_IP}')], contextPath: null, onFailure: false, war: '**/*.war'
-						} else {
-                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"	    
-					}	} catch (err) {
-							echo err.getMessage()
-							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							}
-						}		
-					}
-				}
-	
-	stage('FunctionalAutomation_Web') {
-           			steps {
-		   			script {
-						try {
-						if (env.FUNCTIONAL_WEB_GIT_URL != 'null') {						
-							bat """git clone ${env.FUNCTIONAL_WEB_GIT_URL}
-							cd webtest
-							mvn test """
-					        } else {
-                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"							
-					}	} catch (err) {
-							echo err.getMessage()
-							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							}
-						}					
-					}
-	 		}
-	 
-	stage('FunctionalAutomation_Mobile') {
-            				steps {
-		   			script {
-						try {
-						if (env.FUNCTIONAL_MOBILE_GIT_URL != 'null') {						
-							bat """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL}
-							cd mobiletest
-							mvn test """
-					        } else {
-                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"							
-				}		} catch (err) {
-							echo err.getMessage()
-							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							}
-							}
-					}
-				}
-	
-	 stage('DAST') {
-            			steps {
-		   			script {
-						try {
-                        bat '''mkdir dast-testing
-                        cd dast-testing
-                        wget https://github.com/Arachni/arachni/releases/download/v1.5.1/arachni-1.5.1-0.5.12-windows-x86_64.exe
-							start arachni-1.5.1-0.5.12-windows-x86_64.exe'''			
-            					} catch (err) {
-							echo err.getMessage()
-							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							}
-					}
+            }
 			}
+    }
 	}
-	        stage('Performance') {
-            			steps {
-		   			script {
-						try {
-						if (env.JMETER_GIT_URL != 'null') {						
-							bat """
-                            git clone ${env.JMETER_GIT_URL}
-			    dir
-                            cd folder
-                            jmeter.bat -n -t C:/Windows/system32/config\\systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.jmx -l C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_result.jtl -e -o C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.html			
-            					 """
-					        } else {
-                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"						 
-            				}	} catch (err) {
-							echo err.getMessage()
-							unstable(message: "${STAGE_NAME} is unstable")
-							echo "Error detected, ${env.STAGE_NAME} failed..................!"
-							}
-							}
-					}
-			}
-		
-        stage('Nexus') {
-            steps {
-                powershell 'mkdir test-reports'
-                powershell '''Copy-Item .scannerwork/report-task.txt -Destination test-report
-                cd test-reports
-                move report-task.txt report-task-${BUILD_NUMBER}.txt'''
-                           }
-        }         
-    
- 	post {
-        // Clean after build
-        always {
-		mail to: 'nihas0505@gmail.com',
-        subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
-        body: "${env.BUILD_URL} has result ${currentBuild.result}"
-        }
-    }        
-}
+	}
+	}
