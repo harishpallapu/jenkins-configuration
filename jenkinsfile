@@ -125,7 +125,7 @@ pipeline {
                 script {
                     try {
 						if (env.DAST_IP != 'null') {		    
-                       arachniScanner checks: '*', format: 'html', url: '${env.DAST_IP}:8084/SpringMVCAnnotationShoppingCart/'
+                       arachniScanner checks: '*', format: 'html', url: '${env.DAST_IP}/SpringMVCAnnotationShoppingCart/'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'                       
              }       } catch (err) {
