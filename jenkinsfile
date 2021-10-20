@@ -68,6 +68,9 @@ pipeline {
 				}							
             }
 	 }
+     stage("hi") {
+         steps {
+	 echo 
 	 }
 
 		}
