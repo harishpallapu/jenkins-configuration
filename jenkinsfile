@@ -143,7 +143,7 @@ pipeline {
 						try {
 						if (env.JMETER_GIT_URL != 'null') {						
 							bat '''dir
-                git "${env.JMETER_GIT_URL}"
+                            git clone ${env.JMETER_GIT_URL}
                             cd folder
                             C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/folder/apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter.bat -n -t OnlineShop_1.jmx -l OnlineShop_result.jtl -e -o OnlineShop_%BUILD_NUMBER%.html
             					 '''
