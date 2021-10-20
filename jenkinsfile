@@ -101,6 +101,24 @@ pipeline {
 						}					
 					}
 	 		}
-	 }	
+	 }
+	stage('FunctionalAutomation_Mobile') {
+            				steps {
+		   			script {
+						try {
+						if (env.FUNCTIONAL_MOBILE_GIT_URL != 'null') {						
+							bat """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL}
+							cd mobiletest
+							mvn test """
+					        } else {
+                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'							
+					}	} catch (err) {
+							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+							}
+					}
+				}
+	}	 
 		}
 }
