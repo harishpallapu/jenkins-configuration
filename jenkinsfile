@@ -145,7 +145,7 @@ pipeline {
                             git clone ${env.JMETER_GIT_URL}
 			    dir
                             cd folder
-                            jmeter.bat -n -t C:/Windows/system32/config\\systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.jmx -l C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_result.jtl -e -o C:/Windows/system32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/folder/OnlineShop_1.html
+                            C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/folder/apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter.bat -n -t OnlineShop_1.jmx -l OnlineShop_result.jtl -e -o OnlineShop_%BUILD_NUMBER%.html
             					 """
             					} catch (err) {
 							echo err.getMessage()
