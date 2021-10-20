@@ -55,7 +55,8 @@ pipeline {
             steps {
 				script {
 						try {
-						if (env.BUILD_GIT_URL != 'null') {						
+						if (env.BUILD_GIT_URL != 'null') {
+                git "${env.BUILD_GIT_URL}"
 							bat 'mvn clean package'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'
