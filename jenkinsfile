@@ -169,11 +169,11 @@ pipeline {
                
                cd test-reports
                
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/Shoppingcart/.scannerwork/report-task.txt" -u admin:admin123 -v ${env.NEXUS_IP}/repository/maven-central-repo/sast-reports/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/web-test-report-61.zip" -u admin:admin123 -v ${env.NEXUS_IP}/repository/maven-central-repo/web-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/mobile-test-report-61.zip" -u admin:admin123 -v ${env.NEXUS_IP}/repository/maven-central-repo/mobile-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/jmeter-test-report-61.zip" -u admin:admin123 -v ${env.NEXUS_IP}/repository/maven-central-repo/jmeter-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/arachni-report-html.zip" -u admin:admin123 -v ${env.NEXUS_IP}/repository/maven-central-repo/dast-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/Shoppingcart/.scannerwork/report-task.txt" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/sast-reports/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/web-test-report-61.zip" -u admin:admin123 -v http://localhost:8081}/repository/maven-central-repo/web-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/mobile-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/mobile-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/jmeter-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/jmeter-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/arachni-report-html.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/dast-test-report/ 
                '''
 						        } else {
                                                         echo "skipping the stage ${env.STAGE_NAME}.............................!"       
