@@ -160,8 +160,7 @@ pipeline {
 		} 
         stage('Nexus') {
             steps {
- 		   			script {
-						if (env.NEXUS_IP != 'null') {               
+                
                bat 'tar -a -c -f web-test-report-%BUILD_NUMBER%.zip webtest/target/surefire-reports/*'
                bat 'tar -a -c -f mobile-test-report-%BUILD_NUMBER%.zip mobiletest/target/surefire-reports/*'
                bat 'tar -a -c -f jmeter-test-report-%BUILD_NUMBER%.zip folder/OnlineShop_%BUILD_NUMBER%.html/*'
@@ -169,20 +168,15 @@ pipeline {
                
                cd test-reports
                
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/Shoppingcart/.scannerwork/report-task.txt" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/sast-reports/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/web-test-report-61.zip" -u admin:admin123 -v http://localhost:8081}/repository/maven-central-repo/web-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/mobile-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/mobile-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/jmeter-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/jmeter-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/arachni-report-html.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/dast-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/Shoppingcart/.scannerwork/report-task.txt" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/sast-reports/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/web-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/web-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/mobile-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/mobile-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/jmeter-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/jmeter-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/arachni-report-html.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/dast-test-report/ 
                '''
-						        } else {
-                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"       
                            }
         }         
-    }		
-		}
-}
-}
+    }
  	post {
         // Clean after build
         always {
@@ -215,3 +209,4 @@ pipeline {
 		For more information please contact DEVSECOPS team...........!"""        
         }
     }     
+}
