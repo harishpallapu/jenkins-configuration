@@ -69,7 +69,7 @@ pipeline {
 				}							
             }
 	 }
-     stage("deploye") {
+     stage("deploy") {
          steps {
 					script {
 						try {
@@ -168,11 +168,11 @@ pipeline {
                
                cd test-reports
                
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/Shoppingcart/.scannerwork/report-task.txt" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/sast-reports/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/web-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/web-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/mobile-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/mobile-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/jmeter-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/jmeter-test-report/ 
-               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/sample2/arachni-report-html.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/dast-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/Shoppingcart/.scannerwork/report-task.txt" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/sast-reports/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/web-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/web-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/mobile-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/mobile-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/jmeter-test-report-61.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/jmeter-test-report/ 
+               curl -T "C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/arachni-report-html.zip" -u admin:admin123 -v http://localhost:8081/repository/maven-central-repo/dast-test-report/ 
                '''
                            }
         }         
