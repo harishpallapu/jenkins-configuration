@@ -183,3 +183,36 @@ pipeline {
 		}
 }
 }
+ 	post {
+        // Clean after build
+        always {
+		mail to: 'nihas0505@gmail.com',
+        subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
+        body: """${env.BUILD_URL} has result ${currentBuild.result}
+        
+		Please find build reports................................!
+		
+		SAST REPORTS
+		http://localhost:8081/repository/maven-central-repo/sast-reports/report-task.txt
+		--------------------------------------------------------------------------------------------------------------------------------------
+		FUNCTIONAL AUTOMATION WEB REPORTS
+		http://localhost:8081/repository/maven-central-repo/web-test-report/web-test-report-%BUILD_NUMBER%.zip
+		----------------------------------------------------------------------------------------------------------------------------------------
+		FUNCTIONAL AUTOMATION MOBILE REPORTS
+		http://localhost:8081/repository/maven-central-repo/mobile-test-report/mobile-test-report-%BUILD_NUMBER%.zip
+		------------------------------------------------------------------------------------------------------------------------------------------
+		-----------------------------------------------------------------------------------------------------------------------------------------
+		JMETER REPORTS
+		http://localhost:8081/repository/maven-central-repo/jmeter-test-report/jmeter-test-report-%BUILD_NUMBER%.zip
+		
+		----------------------------------------------------------------------------------------------------------------------------------------
+		DAST REPORTS
+		http://localhost:8081/repository/maven-central-repo/dast-test-report/arachni-report-html-%BUILD_NUMBER%.zip
+		
+		
+		THE PIPELINE IS SUCCESSFULL AND THIS MAIL IS TO REQUEST FOR QA SIGNOFF AND PROCEED TO UAT 0R PROD ENV
+		
+		For more information please contact DEVSECOPS team...........!"""        
+        }
+    }     
+}
