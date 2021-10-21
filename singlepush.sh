@@ -22,3 +22,4 @@ current_branch=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 git push origin "$current_branch"
 echo "Push changes to '$current_branch' branch"
 windows
+hi
