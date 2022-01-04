@@ -6,13 +6,14 @@ pipeline {
         // Install the Maven version configured as "M3" and add it to the path.
         maven "M2_HOME"
     }
-    stages {
+    stages {""
             stage('load parameters') { 
             steps {
                 load "parameters.groovy"
             }
         }
-	Parallel {
+	stage('parallel stage') {
+	   parallel {
         stage('SAST Analysis') {
             steps {
                 script {
@@ -52,6 +53,7 @@ pipeline {
 
 	    }
         }
+	}
 	}
 	stage('build') {
             steps {
