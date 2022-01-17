@@ -19,8 +19,8 @@ pipeline {
                 script {
                     try {
                 // Get some code from a GitHub repository
-						if (env.SAST_GIT_URL != 'null') {				
-                git "${env.SAST_GIT_URL}"
+						if (env.sast_git_url != 'null') {				
+                git "${env.sast_git_url}"
                 bat "git clone https://github.com/harishpallapu/sonarqube_scannar_windows.git"
                 bat "./sonarqube_scannar_windows/sonar-scanner-4.6.2.2472-windows/bin/sonar-scanner.bat"
 					        } else {
