@@ -59,8 +59,8 @@ pipeline {
             steps {
 				script {
 						try {
-						if (env.BUILD_GIT_URL != 'null') {
-                git "${env.BUILD_GIT_URL}"
+						if (env.build_git_url != 'null') {
+                git "${env.build_git_url}"
 							bat 'mvn clean package'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'
@@ -77,8 +77,8 @@ pipeline {
          steps {
 					script {
 						try {
-						if (env.TOMCAT_IP != 'null') {						
-            deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: '${env.TOMCAT_IP}')], contextPath: null, onFailure: false, war: '**/*.war'
+						if (env.tomcat_ip != 'null') {						
+            deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: '${env.tomcat_ip}')], contextPath: null, onFailure: false, war: '**/*.war'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'	    
 					}	} catch (err) {
@@ -93,8 +93,8 @@ pipeline {
            			steps {
 		   			script {
 						try {
-						if (env.FUNCTIONAL_WEB_GIT_URL != 'null') {						
-							bat """git clone ${env.FUNCTIONAL_WEB_GIT_URL}
+						if (env.functional_web_git_url != 'null') {						
+							bat """git clone ${env.functional_web_git_url}
 							cd webtest
 							mvn test """
 					        } else {
@@ -111,8 +111,8 @@ pipeline {
             				steps {
 		   			script {
 						try {
-						if (env.FUNCTIONAL_MOBILE_GIT_URL != 'null') {						
-							bat """ git clone ${env.FUNCTIONAL_MOBILE_GIT_URL}
+						if (env.functional_mobile_git_url != 'null') {						
+							bat """ git clone ${env.functional_mobile_git_url}
 							cd mobiletest
 							mvn test """
 					        } else {
@@ -129,7 +129,7 @@ pipeline {
             steps {
                 script {
                     try {
-						if (env.DAST_IP != 'null') {		    
+						if (env.dast_ip != 'null') {		    
                        arachniScanner checks: '*', format: 'html', url: 'http://mypublicip:8084/SpringMVCAnnotationShoppingCart/'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'                       
@@ -145,9 +145,9 @@ pipeline {
             			steps {
 		   			script {
 						try {
-						if (env.JMETER_GIT_URL != 'null') {						
+						if (env.jmeter_git_url != 'null') {						
 							bat """
-                            git clone ${env.JMETER_GIT_URL}
+                            git clone ${env.jmeter_git_url}
 			    dir
                             cd folder
                             C:/Windows/System32/config/systemprofile/AppData/Local/Jenkins/.jenkins/workspace/dynamic-job/folder/apache-jmeter-5.4.1/apache-jmeter-5.4.1/bin/jmeter.bat -n -t OnlineShop_1.jmx -l OnlineShop_result.jtl -e -o OnlineShop_%BUILD_NUMBER%.html
