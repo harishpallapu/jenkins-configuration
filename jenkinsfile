@@ -37,12 +37,16 @@ pipeline {
             steps {
 			      script {
 						try {
-							bat '''
-							wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.2.2/dependency-check-6.2.2-release.zip
+						if (env.SCA_URL != 'null') {				
+						
+						        bat '''
+							wget "${env.SCA_URL}"
 							 PowerShell Expand-Archive -Path "dependency-check-6.2.2-release.zip"  
 							./dependency-check-6.2.2-release/dependency-check/bin/dependency-check.bat --noupdate --project "TeachersFCU" --scan "Shoppingcart/lib/" --format HTML --out .
 						    '''
-						} catch (err) {
+					        } else {
+                                                        echo "skipping the stage ${env.STAGE_NAME}.............................!"						    
+						}} catch (err) {
 							echo err.getMessage()
 							unstable(message: "${STAGE_NAME} is unstable")
 							echo "Error detected, ${env.STAGE_NAME} failed..................!"
@@ -125,8 +129,8 @@ pipeline {
             steps {
                 script {
                     try {
-						if (env.DAST_IP != 'null') {		    
-                       arachniScanner checks: '*', format: 'html', url: 'http://mypublicip:8084/SpringMVCAnnotationShoppingCart/'
+						if (env.DAST_URL != 'null') {		    
+                       arachniScanner checks: '*', format: 'html', url: '${env.DAST_URL}'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'                       
              }       } catch (err) {
