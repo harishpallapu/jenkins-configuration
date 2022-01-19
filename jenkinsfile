@@ -189,7 +189,7 @@ pipeline {
  	post {
         // Clean after build
         always {
-		mail to: 'nihas0505@gmail.com',
+		mail_to: "${mail_to}",
         subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
         body: """${env.BUILD_URL} has result ${currentBuild.result}
         
