@@ -130,7 +130,7 @@ pipeline {
                 script {
                     try {
 						if (env.dast_ip != 'null') {		    
-                       arachniScanner checks: '*', format: 'html', url: 'http://mypublicip:8084/SpringMVCAnnotationShoppingCart/'
+                       arachniScanner checks: '*', format: 'html', url: '${env.dast_ip}'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'                       
              }       } catch (err) {
@@ -189,7 +189,7 @@ pipeline {
  	post {
         // Clean after build
         always {
-		mail_to to: "${mail_to}",
+		EMAIL_TO to: "${EMAIL_TO}",
         subject: "Status of pipeline: ${currentBuild.fullDisplayName}",
         body: """${env.BUILD_URL} has result ${currentBuild.result}
         
