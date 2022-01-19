@@ -4,6 +4,6 @@ env.BUILD_GIT_URL="https://github.com/harishpallapu/SourceCode_SAST.git"
 env.TOMCAT_IP="http://mypublicip:8084"
 env.FUNCTIONAL_WEB_GIT_URL="https://github.com/harishpallapu/webtest.git"
 env.FUNCTIONAL_MOBILE_GIT_URL=
-env.DAST_URL="http://mypublicip:8084/SpringMVCAnnotationShoppingCart/"  
+env.DAST_URL="http://mypublicip:8084/onlinebookstore-0.0.1-SNAPSHOT/"  
 env.JMETER_GIT_URL="https://github.com/harishpallapu/folder.git"
 env.NEXUS_IP="http://localhost:8081"
