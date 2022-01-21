@@ -18,4 +18,3 @@ alias singlepush="sh singlepush.sh"
 singlepush
 hello
 hi
-FLEXIB
