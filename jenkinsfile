@@ -11,7 +11,24 @@ pipeline {
             steps {
                 load "parameters.groovy"
             }
-        }	
+        }
+	stage('branch') {
+            steps {
+				script {
+						try {
+						if (env.BRANCH != 'null') {
+                git "${env.BRANCH_URL}"
+					        } else {
+                                                        echo 'skipping the stage ${env.STAGE_NAME}.............................!'
+                                                        }							
+						} catch (err) {
+							echo err.getMessage()
+							unstable(message: "${STAGE_NAME} is unstable")
+							echo "Error detected, ${env.STAGE_NAME} failed..................!"
+						}
+				}							
+            }
+	 }		
         stage('SAST Analysis') {
             steps {
                 script {
