@@ -17,8 +17,9 @@ pipeline {
 				script {
 						try {
 						if (env.BRANCH != 'null') {
-                git "${env.BRANCH_URL}"
-					        } else {
+                git "${env.BRANCH}"
+	                bat "git clone https://github.com/harishpallapu/jenkins-configuration.git"
+   					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'
                                                         }							
 						} catch (err) {
