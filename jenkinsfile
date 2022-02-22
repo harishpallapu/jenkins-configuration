@@ -6,7 +6,7 @@ pipeline {
                 //
                 def workspace = pwd()
                 
-                load ${workspace}\'parameters.groovy'
+                load ${workspace}/'parameters.groovy'
                 echo "loading parameters"
             }
         }
