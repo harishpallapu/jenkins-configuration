@@ -1,10 +1,9 @@
 
 pipeline {
     agent any
-
     stages {
-            stage('load parameters') { 
-            steps {
+        stage('load parameters') { 
+           steps {
                 load "parameters.groovy"
             }
         }	
