@@ -1,10 +1,11 @@
 pipeline {
     agent any 
     stages {
-        stage('Build') { 
+        stage('LOAD PARAMETERS') { 
             steps {
                 // 
-                echo "hello world"
+                load "parameters.groovy"
+                echo "loading parameters"
             }
         }
         stage('Test') { 
