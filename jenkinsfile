@@ -29,8 +29,8 @@ pipeline {
             }
         } 
         }
-        stage('SCA') {
-            steps {
+ /*     stage('SCA') {
+          steps {
 			      script {
 						try {
 							bat '''
@@ -46,7 +46,7 @@ pipeline {
 				}
 
 	    }
-        }
+        }    */
 	stage('build') {
             steps {
 				script {
@@ -81,7 +81,7 @@ pipeline {
 					}
 				}
 	}
-	stage('FunctionalAutomation_Web') {
+/*	stage('FunctionalAutomation_Web') {
            			steps {
 		   			script {
 						try {
@@ -98,8 +98,8 @@ pipeline {
 						}					
 					}
 	 		}
-	 }
-	stage('FunctionalAutomation_Mobile') {
+	 } */
+/*	stage('FunctionalAutomation_Mobile') {
             				steps {
 		   			script {
 						try {
@@ -116,7 +116,7 @@ pipeline {
 							}
 					}
 				}
-	}
+	} */
         stage('DAST') {
             steps {
                 script {
@@ -133,7 +133,7 @@ pipeline {
                 }
             }
         }
-	        stage('Performance') {
+/*	        stage('Performance') {
             			steps {
 		   			script {
 						try {
@@ -153,8 +153,8 @@ pipeline {
 							}
 					}
 			}
-		} 
-        stage('Nexus') {
+		} */
+    /*    stage('Nexus') {
             steps {
                 
                bat 'tar -a -c -f web-test-report-%BUILD_NUMBER%.zip webtest/target/surefire-reports/*'
@@ -172,8 +172,8 @@ pipeline {
                '''
                            }
         }         
-    }
- 	post {
+    } */
+ /*	post {
         // Clean after build
         always {
 		mail to: 'nihas0505@gmail.com',
@@ -203,6 +203,6 @@ pipeline {
 		THE PIPELINE IS SUCCESSFULL AND THIS MAIL IS TO REQUEST FOR QA SIGNOFF AND PROCEED TO UAT 0R PROD ENV
 		
 		For more information please contact DEVSECOPS team...........!"""        
-        }
+        } */
     }     
 }
