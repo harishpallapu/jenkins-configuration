@@ -81,7 +81,7 @@ pipeline {
 					}
 				}
 	}
-/*	stage('FunctionalAutomation_Web') {
+	stage('FunctionalAutomation_Web') {
            			steps {
 		   			script {
 						try {
@@ -98,8 +98,8 @@ pipeline {
 						}					
 					}
 	 		}
-	 } */
-/*	stage('FunctionalAutomation_Mobile') {
+	 } 
+	stage('FunctionalAutomation_Mobile') {
             				steps {
 		   			script {
 						try {
@@ -116,7 +116,7 @@ pipeline {
 							}
 					}
 				}
-	} */
+	} 
         stage('DAST') {
             steps {
                 script {
