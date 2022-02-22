@@ -4,7 +4,7 @@ pipeline {
         stage('LOAD PARAMETERS') { 
             steps {
                 // 
-                load 'parameters.groovy'
+                //load 'parameters.groovy'
                 echo "loading parameters"
             }
         }
