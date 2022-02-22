@@ -1,12 +1,7 @@
 
 pipeline {
     agent any
-    stages {
-        stage('load parameters') { 
-           steps {
-                load "parameters.groovy"
-            }
-        }	
+    stages {	
         stage('SAST Analysis') {
             steps {
                 script {
