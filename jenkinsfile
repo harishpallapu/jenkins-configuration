@@ -4,9 +4,6 @@ pipeline {
         stage('LOAD PARAMETERS') { 
             steps {
                 //
-                def workspace = pwd()
-                
-                load ${workspace}/'parameters.groovy'
                 echo "loading parameters"
             }
         }
