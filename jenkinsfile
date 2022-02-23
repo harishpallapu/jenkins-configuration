@@ -65,7 +65,7 @@ pipeline {
 				}							
             }
 	 }
-  /*   stage("deploy") {
+    stage("deploy") {
          steps {
 					script {
 						try {
@@ -80,7 +80,7 @@ pipeline {
 						}		
 					}
 				}
-	} */
+	} 
 /*	stage('FunctionalAutomation_Web') {
            			steps {
 		   			script {
