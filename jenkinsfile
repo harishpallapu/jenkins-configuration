@@ -130,7 +130,7 @@ pipeline {
                 script {
                     try {
 						if (env.DAST_IP != 'null') {		    
-                       arachniScanner checks: '*', format: 'html', url: 'http://${env.TOMCAT_IP}/shopingcart/'
+                       arachniScanner checks: '*', format: 'html', url: 'http://localhost:8084/shopingcart/'
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'                       
              }       } catch (err) {
