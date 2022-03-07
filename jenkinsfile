@@ -77,7 +77,7 @@ pipeline {
 	    					bat '''
 						cd target
 						ren *.war java.war
-	    					curl -T java.war http://tomcat:tomcat@localhost:8084/manager/text/deploy?path=/shopingcart&update=true
+	    					curl -T java.war http://tomcat:tomcat@localhost:8084/manager/text/deploy?path=/shopingcart&update=true&version=001
 	    					'''
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'	    
