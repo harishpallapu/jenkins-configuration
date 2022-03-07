@@ -76,7 +76,7 @@ pipeline {
 						if (env.TOMCAT_IP != 'null') {	
 	    					bat '''
 						cd target
-						ren *.war java.war'
+						ren *.war java.war
 	    					curl -T "java.war" "http://tomcat:tomcat@localhost:8084/manager/text/deploy?path=/myapp&update=true"
 	    					'''
 					        } else {
