@@ -73,8 +73,7 @@ pipeline {
          steps {
 					script {
 						try {
-						if (env.TOMCAT_IP != 'null') {						
-            /*deploy adapters: [tomcat9(credentialsId: 'TOMCAT9', path: '', url: '${env.TOMCAT_IP}')], contextPath: null, war: '**/*.war'
+						if (env.TOMCAT_IP != 'null') {	
 	    					bat 'ren target\*.war java.war'
 						bat 'copy target\*.war .'
 	    					bat 'curl -T "java.war" "http://tomcat:tomcat@localhost:8084/manager/text/deploy?path=/myapp&update=true"'
