@@ -75,11 +75,10 @@ pipeline {
 						try {
 						if (env.TOMCAT_IP != 'null') {	
 	    					bat '''
-						ren target/*.war java.war'
-						copy target/*.war .
-						'''
-	    					bat 'curl -T "java.war" "http://tomcat:tomcat@localhost:8084/manager/text/deploy?path=/myapp&update=true"'
-	    
+						cd target
+						ren *.war java.war'
+	    					curl -T "java.war" "http://tomcat:tomcat@localhost:8084/manager/text/deploy?path=/myapp&update=true"
+	    					'''
 					        } else {
                                                         echo 'skipping the stage ${env.STAGE_NAME}.............................!'	    
 					}	} catch (err) {
