@@ -74,8 +74,8 @@ pipeline {
 					script {
 						try {
 						if (env.TOMCAT_IP != 'null') {	
-	    					bat 'ren target\*.war java.war'
-						bat 'copy target\*.war .'
+	    					bat 'ren target/*.war java.war'
+						bat 'copy target/*.war .'
 	    					bat 'curl -T "java.war" "http://tomcat:tomcat@localhost:8084/manager/text/deploy?path=/myapp&update=true"'
 	    
 					        } else {
